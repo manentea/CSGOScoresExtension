@@ -71,8 +71,7 @@ function populatePage2(){
     for(var i = 0; i < news.length; i++){
         var child = document.createElement('div');
         child.className = 'item';
-        child.innerHTML = '<p><a href=' + news[i].href + '>' + news[i].title.trim() + '</a></p>';
-        console.log(child);
+        child.innerHTML = "<p><a class='link' href=" + news[i].href + '>' + news[i].title.trim() + '</a></p>';
         div.appendChild(child);
     }
 }
@@ -112,7 +111,14 @@ document.getElementById('crown').addEventListener('click', function(e){
     e.preventDefault();
     document.getElementById('newsList').classList.toggle('none');
     document.getElementById('matches').classList.toggle('none');
+    linkTabs();
 
+});
+
+window.addEventListener('click',function(e){
+  if(e.target.href!==undefined){
+    chrome.tabs.create({url:e.target.href})
+  }
 });
 
 matches = [];
