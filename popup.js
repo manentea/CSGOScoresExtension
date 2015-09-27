@@ -1,5 +1,3 @@
-// XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
 var Match = function(string){
   var self = this;
   self.string = string;
@@ -50,27 +48,21 @@ function populatePage(){
         child.className = 'match';
         child.innerHTML = "<p>" + matches[i].team1 + ': ' + matches[i].score1 + '</p>' + '<p>' + matches[i].team2 + ': ' + matches[i].score2 + '</p><p>'+ matches[i].event + '</p>';
         div.appendChild(child);
-        // $('#matches').append("<div class='match'> <p>" + matches[i].team1 + ': ' + matches[i].score1 + '</p>' + '<p>' + matches[i].team2 + ': ' + matches[i].score2 + '</p><p>'+ matches[i].event + '</p></div>');
     }
 }
 
 function loadJSON(callback) {
 
     var xobj = new XMLHttpRequest();
-    xobj.open('GET', 'https://raw.githubusercontent.com/manentea/TTT/master/index.json', true); // Replace 'my_data' with the path to your file
+    xobj.open('GET', 'https://raw.githubusercontent.com/manentea/TTT/master/index.json', true);
     xobj.onreadystatechange = function () {
           if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
             callback(xobj.responseText);
           }
     };
     xobj.send(null);
 }
 
-// $(document).ready(function(){
-//     matches = [];
-//     loadJSON(callback);
-// });
 matches = [];
 loadJSON(callback);
 populatePage();
