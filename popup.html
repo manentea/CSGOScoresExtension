@@ -1,36 +1,23 @@
 <html>
 <head>
-  <script src='./popup.js'></script>
-<style type="text/css">
-    body{
-      width: 20em;
-      text-align: center;
-      background:
-    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-    background-color: #131313;
-    background-size: 20px 20px;
-    }
-
-    .match{
-      border-radius: 5px;
-      color: white;
-      border: 1px solid black;
-      background-color: rgba(100,100,100,.4);
-      text-align: center;
-      height: 10em;
-      margin-bottom: 1em;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="./popup.css">
   <title>CS:GO Scores</title>
 </head>
 <body>
+  <div id="sidebar">
+    <a id='crown' href="#"><img src="./crown.png"/></a>
+    <a id='calendar' href="#"><img src="./calendar.png"/></a>
+    <a id="news" href='#'><img src="./news.png"/></a>
+  </div>
   <div id="matches">
-    <h1>Scores</h1>
+    <h1 style='color:white'>Scores</h1>
+  </div>
+  <div class='none' id="newsList">
+    <h1 style='color:white'>News</h1>
+  </div>
+  <div class='none' id="upcoming">
+    <h1 style='color:white'>Upcoming Matches</h1>
   </div>
 </body>
+<script src='./popup.js'></script>
 </html>
