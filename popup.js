@@ -12,6 +12,12 @@ var News = function(object){
   self.href = object.href;
 }
 
+var Link = function(object){
+  var self = this;
+  self.title = object.title;
+  self.href = object.href;
+}
+
 Match.prototype.score1func = function(){
     for(var i = 0; i < this.string.split(/\D/).length; i++){
         if(this.string.split(/\D/)[i] != ''){
@@ -56,12 +62,22 @@ var callback2 = function(response){
     populatePage2();
 };
 
+var callback3 = function(response){
+    var actualJSON = JSON.parse(response);
+    for(var i = 0; i < actualJSON.length; i++){
+      if(actualJSON[i].title === 'Matchpage'){
+        links.push(new Link(actualJSON[i]));
+      }
+    }
+    console.log(links);
+};
+
 function populatePage(){
     var div = document.getElementById('matches');
     for(var i = 0; i < matches.length; i++){
         var child = document.createElement('div');
         child.className = 'match';
-        child.innerHTML = "<p>" + matches[i].team1 + ': ' + matches[i].score1 + '</p>' + '<p>' + matches[i].team2 + ': ' + matches[i].score2 + '</p><p>'+ matches[i].event + '</p>';
+        child.innerHTML = "<a href=" + links[i].href + "><p>" + matches[i].team1 + ': ' + matches[i].score1 + '</p>' + '<p>' + matches[i].team2 + ': ' + matches[i].score2 + '</p><p>'+ matches[i].event + '</p></a>';
         div.appendChild(child);
     }
 }
@@ -101,6 +117,18 @@ function loadJSON2(callback) {
     xobj.send(null);
 }
 
+function loadJSON3(callback) {
+
+    var xobj = new XMLHttpRequest();
+    xobj.open('GET', 'https://raw.githubusercontent.com/manentea/TTT/master/links.json', true); // Replace 'my_data' with the path to your file
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback3(xobj.responseText);
+          }
+    };
+    xobj.send(null);
+}
 
 document.getElementById('news').addEventListener('click', function(e){
     e.preventDefault();
@@ -123,6 +151,8 @@ window.addEventListener('click',function(e){
 
 matches = [];
 news = [];
+links = [];
+loadJSON3(callback);
 loadJSON(callback);
 populatePage();
 loadJSON2(callback);

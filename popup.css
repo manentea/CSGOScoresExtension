@@ -80,3 +80,8 @@ a#news:hover{
   height: 10em;
   margin-bottom: 1em;
 }
+
+.match a{
+  color: white;
+  text-decoration: none;
+}
