@@ -6,6 +6,13 @@ var Match = function(string){
   self.event = string.split('Event')[1].split('Maps')[0];
 }
 
+var MatchLink = function(object){
+  var self = this;
+  self.team1 = object.title.trim().split(/\s/)[0];
+  self.team2 = object.title.trim().split(/\s/)[3];
+  self.href = object.href;
+}
+
 var News = function(object){
   var self = this;
   self.title = object.title;
@@ -69,7 +76,14 @@ var callback3 = function(response){
         links.push(new Link(actualJSON[i]));
       }
     }
-    console.log(links);
+};
+
+var callback4 = function(response){
+    var actualJSON = JSON.parse(response);
+    for(var i = 0; i < actualJSON.length; i++){
+      matchLinks.push(new MatchLink(actualJSON[i]));
+    }
+    populatePage4();
 };
 
 function populatePage(){
@@ -88,6 +102,16 @@ function populatePage2(){
         var child = document.createElement('div');
         child.className = 'item';
         child.innerHTML = "<p><a class='link' href=" + news[i].href + '>' + news[i].title.trim() + '</a></p>';
+        div.appendChild(child);
+    }
+}
+
+function populatePage4(){
+    var div = document.getElementById('upcoming');
+    for(var i = 0; i < matchLinks.length; i++){
+        var child = document.createElement('div');
+        child.className = 'item';
+        child.innerHTML = "<p><a class='link' href=" + matchLinks[i].href + '>' +'<p>' + matchLinks[i].team1 + '</p><p>' + matchLinks[i].team2 + '</p></a></p>';
         div.appendChild(child);
     }
 }
@@ -130,17 +154,40 @@ function loadJSON3(callback) {
     xobj.send(null);
 }
 
+function loadJSON4(callback) {
+
+    var xobj = new XMLHttpRequest();
+    xobj.open('GET', 'https://raw.githubusercontent.com/manentea/TTT/master/upcoming.json', true); // Replace 'my_data' with the path to your file
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback4(xobj.responseText);
+          }
+    };
+    xobj.send(null);
+}
+
 document.getElementById('news').addEventListener('click', function(e){
     e.preventDefault();
-    document.getElementById('matches').classList.toggle('none');
-    document.getElementById('newsList').classList.toggle('none');
+    document.getElementById('matches').classList.add('none');
+    document.getElementById('upcoming').classList.add('none');
+    document.getElementById('newsList').classList.remove('none');
 });
+
 document.getElementById('crown').addEventListener('click', function(e){
     e.preventDefault();
-    document.getElementById('newsList').classList.toggle('none');
-    document.getElementById('matches').classList.toggle('none');
+    document.getElementById('newsList').classList.add('none');
+    document.getElementById('upcoming').classList.add('none');
+    document.getElementById('matches').classList.remove('none');
     linkTabs();
+});
 
+document.getElementById('calendar').addEventListener('click', function(e){
+    e.preventDefault();
+    document.getElementById('newsList').classList.add('none');
+    document.getElementById('upcoming').classList.remove('none');
+    document.getElementById('matches').classList.add('none');
+    linkTabs();
 });
 
 window.addEventListener('click',function(e){
@@ -152,8 +199,11 @@ window.addEventListener('click',function(e){
 matches = [];
 news = [];
 links = [];
+matchLinks = [];
+loadJSON4(callback);
 loadJSON3(callback);
 loadJSON(callback);
 populatePage();
 loadJSON2(callback);
 populatePage2();
+populatePage4();

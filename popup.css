@@ -12,6 +12,11 @@ body{
     background-size: 20px 20px;
 }
 
+.link{
+  color: white;
+  text-decoration: none;
+}
+
 #matches{
   width: 90%;
   float: right;
@@ -34,9 +39,17 @@ a#news{
 #newsList{
   width: 90%;
   float: right;
+  margin-top: -1.5em;
 }
 
-#newsList div{
+#upcoming{
+  width: 90%;
+  float: right;
+  margin-top: -1.5em;
+}
+
+#newsList div,
+#upcoming div{
   padding: .1em;
   margin-bottom: .5em;
   background-color: rgba(150,150,150,.4);
