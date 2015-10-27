@@ -3,7 +3,7 @@
 
   "name": "CS: GO scores",
   "description": "Get the scores to the most recent pro matches!",
-  "version": "1.6",
+  "version": "1.7",
 
   "browser_action": {
     "default_icon": "icon.png",
