@@ -17,10 +17,23 @@ body{
   text-decoration: none;
 }
 
+.matchScore{
+  font-weight: bold;
+}
+
+.red{
+  color: red;
+}
+
+.green{
+  color: green;
+}
+
 #matches{
   width: 90%;
   float: right;
   margin-top: -1.5em;
+  text-align: center;
 }
 
 a#crown,
@@ -42,14 +55,16 @@ a#news{
   margin-top: -1.5em;
 }
 
-#upcoming{
+#upcoming,
+#matches{
   width: 90%;
   float: right;
   margin-top: -1.5em;
 }
 
 #newsList div,
-#upcoming div{
+#upcoming div,
+#matches div{
   padding: .1em;
   margin-bottom: .5em;
   background-color: rgba(150,150,150,.4);

@@ -1,12 +1,13 @@
   // var Xray = require("x-ray");
   // var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-var Match = function(string){
+var Match = function(link, team1, team2, score, map){
   var self = this;
-  self.string = string;
-  self.team1 = string.split(/\s/)[1].split(/\d/)[0];
-  self.team2 = string.split(/\s/)[2].split(/\d/)[0];
-  self.event = string.split('Event')[1].split('Map')[0];
+  self.link = link;
+  self.team1 = team1;
+  self.team2 = team2;
+  self.score = score;
+  self.map = map
 }
 
 var MatchLink = function(title, href, date){
@@ -71,8 +72,59 @@ function populateUpcoming(){
         child.className = 'item';
         child.innerHTML = "<p><a class='link' href=" + matchLinks[i].href + '>' +'<p>' + matchLinks[i].title + '</p><p>' + matchLinks[i].date + '</p></a></p>';
         div.append(child);
-        console.log(child);
     }
+}
+
+function populateResults(matches){
+  var div = $('#matches');
+  for(var i = 0; i < matches.length; i++){
+    var child = document.createElement('div');
+    child.className = 'item';
+    child.innerHTML = '<a class="link" href="http://hltv.org' + matches[i].link + '"><p style="text-transform:capitalize;">' + matches[i].map + '</p><p>' + matches[i].team1 + ' <span class="matchScore">' + matches[i].score + '</span> '  + matches[i].team2 + '</p></a>';
+    div.append(child);
+  }
+  colorScore();
+}
+
+function loadResults(){
+  var maps;
+  var firstTeam;
+  var secondTeam;
+  var scores;
+  var links;
+  $.ajax({
+    url: 'http://cors.io/?u=http://www.hltv.org/results/',
+    method: 'get',
+    crossDomain: true
+  }).done(function(response){
+
+    var searchParams = ['div.matchTimeCell', 'div.matchTeam1Cell',
+    'div.matchTeam2Cell', 'div.matchScoreCell'];
+
+    var results = [maps, firstTeam, secondTeam, scores];
+
+    for(var i = 0; i < results.length; i++){
+      results[i] = $(response).find(searchParams[i]).map(function(){
+       return $(this).text().trim().replace(/\s+/, " ");
+      });
+    }
+
+    links = $(response).find("div.matchActionCell").map(function(){
+      return $($(this).children()[0]).attr('href');
+    });
+
+    results.push(links);
+
+    matches = [];
+    for(var i = 0; i < links.length; i++){
+      matches.push(new Match(results[4][i], results[1][i], results[2][i], results[3][i], results[0][i]));
+    }
+
+    populateResults(matches);
+  }).fail(function(error){
+    console.log('nope');
+    console.log(error);
+  });
 }
 
 function loadNews(callback) {
@@ -100,15 +152,29 @@ function upcomingMatches(callback) {
     xobj.send(null);
 }
 
+function colorScore(){
+  $('.matchScore').each(function(){
+    var nums = $(this).text().split(' - ');
+    console.log(nums);
+    if(parseInt(nums[0]) > parseInt(nums[1])){
+      var replace = '<span style="font-weight:bold;>"<span class="green"> ' + nums[0] + ' </span> - <span class="red"> ' + nums[1] + '</span></span>';
+    }else{
+      var replace = '<span style="font-weight:bold;>"<span class="red"> ' + nums[0] + ' </span> - <span class="green"> ' + nums[1] + '</span></span>';
+    }
+    $(this).html(replace);
+  })
+}
+
 
 $(document).ready(function(){
-  var news = [];
-  var links = [];
-  var matchLinks = [];
+  news = [];
+  links = [];
+  matchLinks = [];
   loadNews(newsCallback);
   populateNewsPage();
   upcomingMatches(upcomingCallback);
   populateUpcoming();
+  loadResults();
   $("#calendar").on('click', function(event){
     $("#upcoming").toggle(true);
     $("#matches").toggle(false);
